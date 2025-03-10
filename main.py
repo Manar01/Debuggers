@@ -1,27 +1,18 @@
 import joblib
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
 
-<<<<<<< HEAD
-# Load model and scaler
-=======
 # Load Model
->>>>>>> eff9b6f (Added model debug logs)
 try:
     model = joblib.load("knn_model.joblib")
     print("✅ Model loaded successfully!")
 except Exception as e:
     print(f"❌ Error loading model: {e}")
 
-<<<<<<< HEAD
 # Define input data model
-class InputFeatures(BaseModel):
-=======
-# API Schema
 class InputData(BaseModel):
->>>>>>> eff9b6f (Added model debug logs)
     Year: int
     Engine_Size: float
     Mileage: int
@@ -29,9 +20,8 @@ class InputData(BaseModel):
     Make: str
     Options: str
 
-<<<<<<< HEAD
 # Preprocessing function
-def preprocessing(input_features: InputFeatures):
+def preprocessing(input_features: InputData):
     dict_f = {
         'Year': input_features.Year,
         'Engine_Size': input_features.Engine_Size,
@@ -56,8 +46,6 @@ def preprocessing(input_features: InputFeatures):
     return scaled_features
 
 # Prediction endpoint
-=======
->>>>>>> eff9b6f (Added model debug logs)
 @app.post("/predict")
 def predict(data: InputData):
     try:
@@ -66,9 +54,5 @@ def predict(data: InputData):
         print(f"🔍 Received input: {features}, Prediction: {prediction}")  # Debugging print
         return {"prediction": int(prediction[0])}
     except Exception as e:
-<<<<<<< HEAD
-        raise HTTPException(status_code=500, detail=f"Prediction error: {e}")
-=======
         print(f"❌ Prediction error: {e}")
         return {"error": str(e)}
->>>>>>> eff9b6f (Added model debug logs)
