@@ -4,14 +4,14 @@ import joblib
 
 app = FastAPI()
 
-#Load model and scaler
+# Load model and scaler
 try:
     model = joblib.load('knn_model.joblib')
     scaler = joblib.load('scaler.joblib')
 except Exception as e:
     raise RuntimeError(f"Error loading model or scaler: {e}")
 
-#Define input data model
+# Define input data model
 class InputFeatures(BaseModel):
     Year: int
     Engine_Size: float
@@ -20,7 +20,7 @@ class InputFeatures(BaseModel):
     Make: str
     Options: str
 
-#Preprocessing function
+# Preprocessing function
 def preprocessing(input_features: InputFeatures):
     dict_f = {
         'Year': input_features.Year,
@@ -34,10 +34,10 @@ def preprocessing(input_features: InputFeatures):
         'Options_Standard': input_features.Options == 'Standard'
     }
 
-#Convert to list in correct order
+    # Convert to list in correct order
     features_list = [dict_f[key] for key in sorted(dict_f)]
 
-#Ensure scaler is working correctly
+    # Ensure scaler is working correctly
     try:
         scaled_features = scaler.transform([features_list])
     except Exception as e:
@@ -45,7 +45,7 @@ def preprocessing(input_features: InputFeatures):
 
     return scaled_features
 
-#Prediction endpoint
+# Prediction endpoint
 @app.post("/predict")
 async def predict(input_features: InputFeatures):
     try:
