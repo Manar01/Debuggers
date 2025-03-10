@@ -1,25 +1,35 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 import joblib
+from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
+<<<<<<< HEAD
 # Load model and scaler
+=======
+# Load Model
+>>>>>>> eff9b6f (Added model debug logs)
 try:
-    model = joblib.load('knn_model.joblib')
-    scaler = joblib.load('scaler.joblib')
+    model = joblib.load("knn_model.joblib")
+    print("✅ Model loaded successfully!")
 except Exception as e:
-    raise RuntimeError(f"Error loading model or scaler: {e}")
+    print(f"❌ Error loading model: {e}")
 
+<<<<<<< HEAD
 # Define input data model
 class InputFeatures(BaseModel):
+=======
+# API Schema
+class InputData(BaseModel):
+>>>>>>> eff9b6f (Added model debug logs)
     Year: int
     Engine_Size: float
-    Mileage: float
+    Mileage: int
     Type: str
     Make: str
     Options: str
 
+<<<<<<< HEAD
 # Preprocessing function
 def preprocessing(input_features: InputFeatures):
     dict_f = {
@@ -46,11 +56,19 @@ def preprocessing(input_features: InputFeatures):
     return scaled_features
 
 # Prediction endpoint
+=======
+>>>>>>> eff9b6f (Added model debug logs)
 @app.post("/predict")
-async def predict(input_features: InputFeatures):
+def predict(data: InputData):
     try:
-        data = preprocessing(input_features)
-        y_pred = model.predict(data)
-        return {"prediction": y_pred.tolist()[0]}
+        features = [[data.Year, data.Engine_Size, data.Mileage]]  # Adjust this based on your model
+        prediction = model.predict(features)
+        print(f"🔍 Received input: {features}, Prediction: {prediction}")  # Debugging print
+        return {"prediction": int(prediction[0])}
     except Exception as e:
+<<<<<<< HEAD
         raise HTTPException(status_code=500, detail=f"Prediction error: {e}")
+=======
+        print(f"❌ Prediction error: {e}")
+        return {"error": str(e)}
+>>>>>>> eff9b6f (Added model debug logs)
